@@ -6,7 +6,7 @@ import "@NadeemShakya/polymerfire/firebase-auth.js";
 import "@NadeemShakya/polymerfire/firestore-query.js";
 import "@NadeemShakya/polymerfire/firestore-document";
 
-import "@aspen-elements/paper-chip/paper-chip-input-autocomplete.js";
+import "@NadeemShakya/aspen-elements/paper-chip/paper-chip-input-autocomplete.js";
 
 /**
  * `firefly-fs-tags` This component displays a list of tags. An autocomplete component gives the user
