@@ -2,9 +2,9 @@ import { PolymerElement } from "@polymer/polymer/polymer-element.js";
 import { html } from "@polymer/polymer/lib/utils/html-tag.js";
 import { afterNextRender } from "@polymer/polymer/lib/utils/render-status.js";
 
-import "@firefly-elements/polymerfire/firebase-auth.js";
-import "@firefly-elements/polymerfire/firestore-query.js";
-import "@firefly-elements/polymerfire/firestore-document";
+import "@NadeemShakya/polymerfire/firebase-auth.js";
+import "@NadeemShakya/polymerfire/firestore-query.js";
+import "@NadeemShakya/polymerfire/firestore-document";
 
 import "@aspen-elements/paper-chip/paper-chip-input-autocomplete.js";
 
@@ -76,19 +76,19 @@ class FireflyTags extends PolymerElement {
       /** The name of the firebase application. */
       appName: {
         type: String,
-        value: ""
+        value: "",
       },
 
       /** The label for the field. */
       label: {
         type: String,
-        value: ""
+        value: "",
       },
 
       /** The query path used to retrieve the suggestions. */
       suggestedValuesPath: {
         type: String,
-        value: ""
+        value: "",
       },
 
       /**
@@ -97,14 +97,14 @@ class FireflyTags extends PolymerElement {
        */
       __suggestions: {
         type: Array,
-        value: []
+        value: [],
       },
 
       /** An Array<String> of values selected by the user. */
       tags: {
         type: Array,
         value: [],
-        observer: "__tagsInitialized"
+        observer: "__tagsInitialized",
       },
 
       /**
@@ -112,57 +112,54 @@ class FireflyTags extends PolymerElement {
        */
       key: {
         type: String,
-        value: ""
+        value: "",
       },
 
       __tags: {
         type: Array,
-        value: []
+        value: [],
       },
 
       /** The query path used to save selected values. */
       selectedValuesPath: {
         type: String,
-        value: ""
+        value: "",
       },
-
       /** This is the tags data from the db. */
       data: {
         type: Object,
-        value: ""
+        value: "",
       },
 
       __deleted: {
         type: Boolean,
-        value: false
+        value: false,
       },
 
       selectedValuesNodePath: {
         type: String,
-        value: ""
+        value: "",
       },
 
       navigate: {
         type: Boolean,
-        value: false
+        value: false,
       },
       navigateTo: {
         type: String,
-        value: ""
-      }
+        value: "",
+      },
     };
   }
 
   __handleDataChanged(e) {
     let data = e.detail.value;
-
     let suggestions = [];
     for (let item of data) {
-      if (item[this.key] !== undefined) {
-        suggestions.push({ text: item[this.key], value: item.$key });
-      }
+      suggestions.push({ text: item[this.key], value: item[this.key] });
     }
-    this.set("__suggestions", suggestions);
+
+    this.__suggestions = [...suggestions];
   }
 
   __tagsInitialized(tags) {
@@ -188,7 +185,7 @@ class FireflyTags extends PolymerElement {
 
       const navigationTo = this.navigateTo;
       try {
-        const key = this.data.find(elem => elem.name === e.detail.tag).$key;
+        const key = this.data.find((elem) => elem.name === e.detail.tag).$key;
         window.open(`/${navigationTo}/${key}`, "_blank");
       } catch (e) {
         window.open(`/${navigationTo}`, "_blank");
@@ -211,7 +208,7 @@ class FireflyTags extends PolymerElement {
   ready() {
     super.ready();
 
-    afterNextRender(this, function() {});
+    afterNextRender(this, function () {});
   }
 
   /**
@@ -224,7 +221,7 @@ class FireflyTags extends PolymerElement {
     let path = this.selectedValuesPath;
 
     let tag = e.detail.chipLabel;
-    if (this.__suggestions.indexOf(tag) == -1) {
+    if (this.__suggestions.every((suggestion) => suggestion.text !== tag)) {
       let key = this.key;
       let tagObject = {};
       tagObject[key] = tag;
@@ -244,8 +241,8 @@ class FireflyTags extends PolymerElement {
           composed: true,
           detail: {
             tags: tag,
-            path: path
-          }
+            path: path,
+          },
         })
       );
     }
@@ -265,8 +262,8 @@ class FireflyTags extends PolymerElement {
         composed: true,
         detail: {
           tags: e.detail,
-          path: path
-        }
+          path: path,
+        },
       })
     );
   }
@@ -282,9 +279,13 @@ class FireflyTags extends PolymerElement {
     let chipTray = this.shadowRoot.querySelector(
       "paper-chip-input-autocomplete"
     );
-    chipTray.addEventListener("chip-created", e => this.__handleChipCreated(e));
-    chipTray.addEventListener("chip-removed", e => this.__handleChipDeleted(e));
-    chipTray.addEventListener("tag-clicked", e => this.__launch(e));
+    chipTray.addEventListener("chip-created", (e) =>
+      this.__handleChipCreated(e)
+    );
+    chipTray.addEventListener("chip-removed", (e) =>
+      this.__handleChipDeleted(e)
+    );
+    chipTray.addEventListener("tag-clicked", (e) => this.__launch(e));
   }
 
   /**
@@ -297,13 +298,13 @@ class FireflyTags extends PolymerElement {
     let chipTray = this.shadowRoot.querySelector(
       "paper-chip-input-autocomplete"
     );
-    chipTray.removeEventListener("chip-created", e =>
+    chipTray.removeEventListener("chip-created", (e) =>
       this.__handleChipCreated(e)
     );
-    chipTray.removeEventListener("chip-removed", e =>
+    chipTray.removeEventListener("chip-removed", (e) =>
       this.__handleChipDeleted(e)
     );
-    chipTray.removeEventListener("tag-clicked", e => this.__launch(e.tag));
+    chipTray.removeEventListener("tag-clicked", (e) => this.__launch(e.tag));
   }
 }
 
